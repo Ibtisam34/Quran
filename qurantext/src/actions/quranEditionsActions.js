@@ -7,7 +7,8 @@ export const fetchQuranEditions = () => {
   return async (dispatch) => {
     try {
       const response = await axios.get('http://api.quran-tafseer.com/quran/');
-      const data = response.data.data;
+      const data = response.data; // Access the top-level data property
+      console.log(data);
       dispatch({ type: FETCH_QURAN_EDITIONS_SUCCESS, payload: data });
     } catch (error) {
       dispatch({ type: FETCH_QURAN_EDITIONS_FAILURE, payload: error.message });
