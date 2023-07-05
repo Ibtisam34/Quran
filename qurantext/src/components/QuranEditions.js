@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchQuranEditions } from '../actions/quranEditionsActions';
+import './QuranEditions.css';
 const QuranEditions = () => {
-  const [editions, setEditions] = useState([]);
+  const dispatch = useDispatch();
+  const { editions, loading, error } = useSelector((state) => state.quranEditions);
   useEffect(() => {
-    const fetchEditions = async () => {
-      try {
-        const response = await fetch('http://api.alquran.cloud/v1/edition');
-        const data = await response.json();
-        setEditions(data.data);
-      } catch (error) {
-        console.log('Error fetching Quran editions:', error);
-      }
-    };
-    fetchEditions();
-  }, []);
+    dispatch(fetchQuranEditions());
+  }, [dispatch]);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   return (
-    <div>
+    <div className="container">
       <h1>Quran Editions</h1>
       {editions.map((edition) => (
-        <div key={edition.identifier}>
+        <div key={edition.identifier} className="card">
           <h2>{edition.englishName}</h2>
           <p>Identifier: {edition.identifier}</p>
           <p>Language: {edition.language}</p>
