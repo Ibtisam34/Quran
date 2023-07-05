@@ -1,9 +1,10 @@
-import './App.css';
-import CoverPage from './CoverPage';
-function App() {
+import React from 'react';
+import QuranEditions from './QuranEditions';
+const App = () => {
   return (
-   <CoverPage />
+    <div>
+      <QuranEditions />
+    </div>
   );
-}
-
+};
 export default App;
