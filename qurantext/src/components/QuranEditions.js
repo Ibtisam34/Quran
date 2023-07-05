@@ -21,7 +21,9 @@ const QuranEditions = () => {
   const selectedEdition = editions[0];
   const chapter = 1; // Example chapter number
   const verse = 1; // Example verse number
-  const translation = selectedEdition.verses[chapter][verse].translation; // Get the Arabic translation for the specified chapter and verse
+  const chapterData = selectedEdition.data[chapter];
+  const verseData = chapterData.verses[verse];
+  const translation = verseData.translation; // Get the Arabic translation for the specified chapter and verse
   return (
     <div className="quran-editions">
       <h1>Quran Editions</h1>
