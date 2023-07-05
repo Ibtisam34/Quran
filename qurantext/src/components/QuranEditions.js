@@ -1,41 +1,66 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchQuranEditions } from '../actions/quranEditionsActions';
+import React, { useEffect, useState } from 'react';
+import QuranApi from '../services/QuranApi';
 import VerseDisplay from './VerseDisplay';
-import './QuranEditions.css';
+import Pagination from './Pagination';
+import SearchBar from './SearchBar';
+import BookmarkList from './BookmarkList';
+import RecitationPlayer from './RecitationPlayer';
+import TranslationSwitcher from './TranslationSwitcher';
+import TafsirDisplay from './TafsirDisplay';
 const QuranEditions = () => {
-  const dispatch = useDispatch();
-  const { editions, loading, error } = useSelector((state) => state.quranEditions);
+  const [editions, setEditions] = useState([]);
+  const [selectedVerse, setSelectedVerse] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedChapter, setSelectedChapter] = useState(null); // State variable to track the selected chapter
   useEffect(() => {
-    dispatch(fetchQuranEditions());
-  }, [dispatch]);
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-  if (!editions || editions.length === 0) {
-    return <div>No editions found.</div>;
-  }
-  const selectedEdition = editions[0];
-  const chapter = 1; // Example chapter number
-  const verse = 1; // Example verse number
-  const chapterData = selectedEdition.data[chapter];
-  const verseData = chapterData.verses[verse];
-  const translation = verseData.translation; // Get the Arabic translation for the specified chapter and verse
+    const fetchQuranicEditions = async () => {
+      try {
+        const data = await QuranApi.fetchQuranicText();
+        setEditions(data);
+      } catch (error) {
+        console.log('Error fetching Quran editions:', error);
+      }
+    };
+    fetchQuranicEditions();
+  }, []);
+  const handleChapterSelect = (chapter) => {
+    setSelectedChapter(chapter);
+  };
+  // Function to get the verses of the selected chapter
+  const getVersesOfChapter = (chapter) => {
+    if (!chapter || !editions.length) return [];
+    const chapterId = chapter.chapter_id;
+    const edition = editions.find((edition) => edition.chapter_id === chapterId);
+    if (!edition) return [];
+    return edition.verses;
+  };
+  // Get the verses of the selected chapter
+  const versesOfChapter = getVersesOfChapter(selectedChapter);
   return (
-    <div className="quran-editions">
+    <div>
       <h1>Quran Editions</h1>
-      {editions.map((edition) => (
-        <div key={edition.identifier}>
-          <h2>{edition.englishName}</h2>
-          <p>Identifier: {edition.identifier}</p>
-          <p>Language: {edition.language}</p>
-          <p>Format: {edition.format}</p>
+      {/* Display the selected chapter */}
+      {selectedChapter && (
+        <div>
+          <h2>{selectedChapter.name_simple}</h2>
+          {/* Display the verses of the selected chapter */}
+          {versesOfChapter.map((verse) => (
+            <p key={verse.verse_key}>{verse.text_madani}</p>
+          ))}
         </div>
-      ))}
-      <VerseDisplay chapter={chapter} verse={verse} translation={translation} />
+      )}
+      <SearchBar onSearch={handleSearch} />
+      <SearchResults results={searchResults} />
+      <Pagination currentPage={currentPage} onPageChange={handlePageChange} />
+      <BookmarkList bookmarks={bookmarks} />
+      <RecitationPlayer reciter={selectedReciter} />
+      <TranslationSwitcher
+        translations={translations}
+        selectedTranslation={selectedTranslation}
+        onTranslationChange={handleTranslationChange}
+      />
+      <TafsirDisplay verse={selectedVerse} />
     </div>
   );
 };
