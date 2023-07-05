@@ -1,11 +1,9 @@
 import React from 'react';
-import QuranEditions from './QuranEditions';
-import QuranVerses from './QuranVerses';
+import QuranEditions from './components/QuranEditions';
 const App = () => {
   return (
     <div>
       <QuranEditions />
-      <QuranVerses />
     </div>
   );
 };
