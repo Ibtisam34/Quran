@@ -1,5 +1,7 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import rootReducer from './reducers';
-const store = createStore(rootReducer, applyMiddleware(thunk));
+import { createStore, combineReducers } from 'redux';
+import quranEditionsReducer from './reducers/quranEditionsReducer';
+const rootReducer = combineReducers({
+  quranEditions: quranEditionsReducer,
+});
+const store = createStore(rootReducer);
 export default store;

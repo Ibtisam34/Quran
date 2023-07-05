@@ -15,10 +15,10 @@ const QuranEditions = () => {
     return <div>Error: {error}</div>;
   }
   return (
-    <div className="container">
+    <div className="quran-editions">
       <h1>Quran Editions</h1>
       {editions.map((edition) => (
-        <div key={edition.identifier} className="card">
+        <div key={edition.identifier}>
           <h2>{edition.englishName}</h2>
           <p>Identifier: {edition.identifier}</p>
           <p>Language: {edition.language}</p>
