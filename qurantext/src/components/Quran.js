@@ -19,7 +19,21 @@ const Quran = () => {
   if (!quranData) {
     return <div>Loading...</div>;
   }
-  // Render the Quran data here
-  return <div>{/* Render the Quranic verses using the quranData */}</div>;
+  const renderAyahs = () => {
+    return quranData.surahs.map(surah => (
+      <div key={surah.number}>
+        <h2>{surah.englishName}</h2>
+        {surah.ayahs.map(ayah => (
+          <div key={ayah.number}>
+            <p>
+              {ayah.text}
+              <span>{ayah.numberInSurah}</span>
+            </p>
+          </div>
+        ))}
+      </div>
+    ));
+  };
+  return <div>{renderAyahs()}</div>;
 };
 export default Quran;
