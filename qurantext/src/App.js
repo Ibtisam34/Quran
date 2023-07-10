@@ -1,12 +1,13 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import store from './store';
-import QuranEditions from './components/QuranEditions';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Quran from './components/Quran';
 const App = () => {
   return (
-    <Provider store={store}>
-      <QuranEditions />
-    </Provider>
+    <Router>
+      <div>
+        <Route exact path="/" component={Quran} />
+      </div>
+    </Router>
   );
 };
 export default App;
